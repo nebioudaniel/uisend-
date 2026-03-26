@@ -1,65 +1,97 @@
-import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen flex flex-col bg-white">
+      {/* Nav */}
+      <nav className="border-b border-gray-100 px-6 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-green-500" />
+          <span className="text-sm font-medium text-gray-900">UniSend</span>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        <div className="flex items-center gap-2">
+          <Link
+            href="/login"
+            className="text-xs text-gray-500 px-3 py-1.5 rounded-lg hover:bg-gray-50"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            Log in
+          </Link>
+          <Link
+            href="/register"
+            className="text-xs bg-gray-900 text-white px-3 py-1.5 rounded-lg hover:bg-gray-800"
           >
-            Documentation
-          </a>
+            Get started
+          </Link>
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <main className="flex-1 flex flex-col items-center justify-center text-center px-6 py-20">
+        <div className="inline-flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-full px-3 py-1 mb-6">
+          <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+          <span className="text-xs text-gray-500">
+            Telegram · WhatsApp · Email
+          </span>
+        </div>
+        <h1 className="text-3xl font-medium text-gray-900 leading-tight mb-3 max-w-sm">
+          One place for all your messages
+        </h1>
+        <p className="text-sm text-gray-400 mb-8 max-w-xs leading-relaxed">
+          Send to Telegram, WhatsApp, and Email at once. Simple, fast, unified.
+        </p>
+        <div className="flex gap-2">
+          <Link
+            href="/register"
+            className="text-sm bg-gray-900 text-white px-5 py-2 rounded-lg hover:bg-gray-800"
+          >
+            Get started free
+          </Link>
+          <Link
+            href="#features"
+            className="text-sm border border-gray-200 text-gray-600 px-5 py-2 rounded-lg hover:bg-gray-50"
+          >
+            See how it works
+          </Link>
+        </div>
+
+        {/* Features */}
+        <div
+          id="features"
+          className="grid grid-cols-3 gap-3 mt-16 max-w-lg w-full"
+        >
+          {[
+            {
+              name: "Telegram",
+              desc: "Connect your bot token",
+              color: "bg-blue-50",
+            },
+            { name: "WhatsApp", desc: "Via Cloud API", color: "bg-green-50" },
+            {
+              name: "Email",
+              desc: "SMTP or any provider",
+              color: "bg-amber-50",
+            },
+          ].map((f) => (
+            <div key={f.name} className={`${f.color} rounded-xl p-4 text-left`}>
+              <p className="text-xs font-medium text-gray-800 mb-1">{f.name}</p>
+              <p className="text-xs text-gray-400 leading-relaxed">{f.desc}</p>
+            </div>
+          ))}
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-gray-100 px-6 py-4 flex items-center justify-between">
+        <span className="text-xs text-gray-400">UniSend © 2025</span>
+        <div className="flex gap-4">
+          <span className="text-xs text-gray-400 cursor-pointer hover:text-gray-600">
+            Privacy
+          </span>
+          <span className="text-xs text-gray-400 cursor-pointer hover:text-gray-600">
+            Terms
+          </span>
+        </div>
+      </footer>
     </div>
   );
 }

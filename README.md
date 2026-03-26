@@ -52,4 +52,4 @@ Got a cool idea for a new integration? Spotted a bug? Open a PR! Let's make comm
 📬 Say Hello
 
 Need a hand or want to chat?
-📧 support@unifiedmessaging.com
+📧 dnebiou@gmail.com or mesobaiprojects@gmail.com

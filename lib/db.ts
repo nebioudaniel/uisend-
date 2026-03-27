@@ -8,18 +8,15 @@ import { neon } from "@neondatabase/serverless";
 const globalForPrisma = global as unknown as { prisma?: PrismaClient };
 
 function createPrisma(): PrismaClient {
-  // 1. Get the string and trim any accidental whitespace/quotes
-  const rawUrl = process.env.DATABASE_URL;
-  
-  if (!rawUrl) {
-    throw new Error("DATABASE_URL is missing! Add it to your environment variables.");
+  // Use a unique name like 'dbUrl' to avoid shadowing the 'neon' import
+  const dbUrl = process.env.DATABASE_URL;
+
+  if (!dbUrl || typeof dbUrl !== 'string') {
+    throw new Error("DATABASE_URL is missing or not a string. Check Vercel Environment Variables.");
   }
 
-  // Clean the URL string (removes whitespace and surrounding quotes if they leaked in)
-  const url = rawUrl.trim().replace(/^["']|["']$/g, "");
-
-  // 2. Initialize the Neon connection
-  const sql = neon(url); 
+  // Pass the string, not the function
+  const sql = neon(dbUrl.trim()); 
   
   // @ts-ignore
   const adapter = new PrismaNeonHttp(sql);

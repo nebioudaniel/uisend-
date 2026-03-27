@@ -17,7 +17,6 @@ function createPrisma(): PrismaClient {
 
   // Pass the string, not the function
   const sql = neon(dbUrl.trim()); 
-  
   // @ts-ignore
   const adapter = new PrismaNeonHttp(sql);
   return new PrismaClient({ adapter });

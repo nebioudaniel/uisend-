@@ -8,8 +8,8 @@ if (!connectionString) {
   throw new Error("DATABASE_URL is missing from environment variables.");
 }
 
-// Pass the connection string directly to PrismaNeonHttp
-const adapter = new PrismaNeonHttp(connectionString);
+// PrismaNeonHttp requires 2 arguments: connectionString and options object
+const adapter = new PrismaNeonHttp(connectionString, {});
 
 const globalForPrisma = global as unknown as { prisma?: PrismaClient };
 

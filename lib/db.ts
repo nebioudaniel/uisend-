@@ -1,16 +1,15 @@
-process.env.TZ = "UTC"; // MUST BE FIRST to fix Neon/Prisma local timezone drift
+process.env.TZ = "UTC"; // MUST BE FIRST
 
 import { PrismaNeonHttp } from "@prisma/adapter-neon";
 import { PrismaClient } from "@prisma/client";
 import { neon } from "@neondatabase/serverless";
 
-// Use PrismaNeonHttp - simpler, no WebSocket/Pool complexity
-const DB_URL = "postgresql://neondb_owner:npg_bshMw63irGkf@ep-bold-butterfly-amk57fna-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require";
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) throw new Error("DATABASE_URL is not set!");
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
 function createPrisma() {
-  const connectionString = process.env.DATABASE_URL || DB_URL;
   const sql = neon(connectionString);
   // @ts-ignore
   const adapter = new PrismaNeonHttp(sql);
@@ -19,4 +18,3 @@ function createPrisma() {
 
 export const prisma = globalForPrisma.prisma ?? createPrisma();
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
-

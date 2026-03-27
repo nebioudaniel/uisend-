@@ -5,26 +5,27 @@ import { PrismaNeonHttp } from "@prisma/adapter-neon";
 import { PrismaClient } from "@prisma/client";
 import { neon } from "@neondatabase/serverless";
 
-// Global object for Prisma to avoid multiple instances in development
 const globalForPrisma = global as unknown as { prisma?: PrismaClient };
 
-// Function to create Prisma client
 function createPrisma(): PrismaClient {
-  const connectionString = process.env.DATABASE_URL;
-
-  // Validation inside the function ensures TypeScript knows it's a string on the next line
-  if (!connectionString) {
-    throw new Error("DATABASE_URL is not set! Please add it in your Environment Variables.");
+  // 1. Get the string and trim any accidental whitespace/quotes
+  const rawUrl = process.env.DATABASE_URL;
+  
+  if (!rawUrl) {
+    throw new Error("DATABASE_URL is missing! Add it to your environment variables.");
   }
 
-  const sql = neon(connectionString); 
+  // Clean the URL string (removes whitespace and surrounding quotes if they leaked in)
+  const url = rawUrl.trim().replace(/^["']|["']$/g, "");
+
+  // 2. Initialize the Neon connection
+  const sql = neon(url); 
   
-  // @ts-ignore: PrismaNeonHttp adapter typing often lags behind Prisma versions
+  // @ts-ignore
   const adapter = new PrismaNeonHttp(sql);
   return new PrismaClient({ adapter });
 }
 
-// Reuse the client in development to avoid "PrismaClient already exists" errors
 export const prisma = globalForPrisma.prisma ?? createPrisma();
 
 if (process.env.NODE_ENV !== "production") {

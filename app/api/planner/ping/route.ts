@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import fs from "fs";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const THIRTY_SECONDS = 30 * 1000;
 const LOG_FILE = "/tmp/ping_logs.txt";
 

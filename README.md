@@ -37,20 +37,11 @@ Get your environment up and running in seconds:
 
     npm run dev
 
-🛠️ Tech Stack
 
-    Frontend: Next.js & Tailwind CSS
 
-    Database: Neon (PostgreSQL)
-
-    Auth: Simple token-based system
-
-    APIs: Official SDKs (Telegram, Slack, etc.)
-
-🤝 Contributing
 
 Got a cool idea for a new integration? Spotted a bug? Open a PR! Let's make communication suck less together.
 📬 Say Hello
 
-Need a hand or want to chat?
+ want to chat?
 📧 dnebiou@gmail.com or mesobaiprojects@gmail.com

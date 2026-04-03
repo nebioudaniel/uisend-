@@ -5,7 +5,7 @@ import fs from "fs";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-const THIRTY_SECONDS = 30 * 1000;
+const TEN_SECONDS = 10 * 1000;
 const LOG_FILE = "/tmp/ping_logs.txt";
 
 function logToFile(msg: string) {
@@ -57,8 +57,8 @@ export async function GET() {
     // CRITICAL: If lastPingMs is in the future relative to now (clock mismatch), 
     // we bypass the wait so we can reset lastPingAt to a correct value.
     const diff = nowMs - lastPingMs;
-    if (lastPingMs > 0 && diff > 0 && diff < THIRTY_SECONDS) {
-      logToFile(`[Ping]   - Wait time (30s) not elapsed (${Math.round(diff / 1000)}s)`);
+    if (lastPingMs > 0 && diff > 0 && diff < TEN_SECONDS) {
+      logToFile(`[Ping]   - Wait time (10s) not elapsed (${Math.round(diff / 1000)}s)`);
       continue;
     }
 
@@ -69,7 +69,7 @@ export async function GET() {
     // ── PHASE 1: Pending & Not Started ──
     if (task.status === "pending" && !task.startedAt) {
       logToFile(`[Ping]   - Phase 1: Pending & Not Started`);
-      message = `⏰ *TIME TO START*\n🚀 Task: *"${task.title}"*${details}\n\n👉 *ACTION NEEDED*: Go to your dashboard and click *START* to silence this! (30s interval)`;
+      message = `⏰ *TIME TO START*\n🚀 Task: *"${task.title}"*${details}\n\n👉 *ACTION NEEDED*: Go to your dashboard and click *START* to silence this! (10s interval)`;
     }
 
     // ── PHASE 2: Midpoint ──
@@ -82,13 +82,13 @@ export async function GET() {
     ) {
       logToFile(`[Ping]   - Phase 2: Halfway point reached`);
       const elapsed = Math.round((nowMs - startMs) / 60000);
-      message = `⏱️ *HALFWAY CHECK-IN*\n🏃 Task: *"${task.title}"*${details}\n⏱️ *Elapsed*: ${elapsed}/${task.duration} minutes.\n\n👉 *ACTION NEEDED*: Go to your dashboard and click *MID-CHECK* to confirm! (30s interval)`;
+      message = `⏱️ *HALFWAY CHECK-IN*\n🏃 Task: *"${task.title}"*${details}\n⏱️ *Elapsed*: ${elapsed}/${task.duration} minutes.\n\n👉 *ACTION NEEDED*: Go to your dashboard and click *MID-CHECK* to confirm! (10s interval)`;
     }
 
     // ── PHASE 3: Finish ──
     else if (task.status === "in_progress" && nowMs >= endMs && !task.finishedAt) {
       logToFile(`[Ping]   - Phase 3: Time's up`);
-      message = `🏁 *TIME'S UP - FINISH NOW*\n🎯 Task: *"${task.title}"*${details}\n\n👉 *ACTION NEEDED*: Go to your dashboard and click *FINISH* to complete this! (30s interval)`;
+      message = `🏁 *TIME'S UP - FINISH NOW*\n🎯 Task: *"${task.title}"*${details}\n\n👉 *ACTION NEEDED*: Go to your dashboard and click *FINISH* to complete this! (10s interval)`;
     }
 
     if (message) {

@@ -62,6 +62,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [filter, setFilter] = useState<string>("all");
 
   useEffect(() => {
     const savedId = localStorage.getItem("telegramId");
@@ -78,7 +79,7 @@ export default function Dashboard() {
       loadTasks(); 
     };
     runPing();
-    const interval = setInterval(runPing, 30 * 1000);
+    const interval = setInterval(runPing, 10 * 1000);
     return () => clearInterval(interval);
   }, [telegramId]);
 
@@ -175,6 +176,22 @@ export default function Dashboard() {
           ))}
         </div>
 
+        <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-1 hide-scrollbar">
+          {["all", "pending", "in_progress", "completed"].map(f => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`px-4 py-1.5 rounded-full text-xs font-semibold capitalize whitespace-nowrap transition-all ${
+                filter === f
+                  ? "bg-gray-900 text-white shadow-sm"
+                  : "bg-white border border-gray-200 text-gray-500 hover:bg-gray-50"
+              }`}
+            >
+              {f.replace("_", " ")}
+            </button>
+          ))}
+        </div>
+
         {tasks.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 bg-white border border-dashed border-gray-200 rounded-2xl gap-4 text-center">
             <div className="w-11 h-11 rounded-2xl bg-gray-50 flex items-center justify-center"><Inbox size={18} className="text-gray-300" /></div>
@@ -185,8 +202,20 @@ export default function Dashboard() {
             <Button size="sm" className="h-8 px-4 rounded-xl text-xs gap-1.5 font-medium" onClick={() => setShowModal(true)}><Plus size={13} />Create plan</Button>
           </div>
         ) : (
-          <div className="flex flex-col gap-3">
-            {tasks.map(task => {
+          <div className="flex flex-col gap-8">
+            {["in_progress", "pending", "completed"].map(groupStatus => {
+              if (filter !== "all" && filter !== groupStatus) return null;
+              const groupTasks = tasks.filter(t => t.status === groupStatus);
+              if (groupTasks.length === 0) return null;
+              return (
+                <div key={groupStatus} className="flex flex-col gap-3">
+                  <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider flex items-center gap-2">
+                    {groupStatus === "in_progress" && <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />}
+                    {groupStatus === "pending" && <span className="w-2 h-2 rounded-full bg-amber-500" />}
+                    {groupStatus === "completed" && <span className="w-2 h-2 rounded-full bg-green-500" />}
+                    {groupStatus.replace('_', ' ')} ({groupTasks.length})
+                  </h2>
+                  {groupTasks.map(task => {
               const status = STATUS_CFG[task.status] ?? STATUS_CFG.pending;
               const catCls = CAT_CFG[task.category ?? "work"] ?? CAT_CFG.work;
               const phase  = getPhaseAction(task);
@@ -229,6 +258,9 @@ export default function Dashboard() {
                     </div>
                     <span className="flex items-center gap-1 text-[10px] text-gray-400 font-medium"><Timer size={11} />{task.duration}m</span>
                   </div>
+                </div>
+              );
+            })}
                 </div>
               );
             })}
